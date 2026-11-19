@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hummingbird 3D: Rig, Weight Paint &amp; 6 Animations · Animal Animator</title>
+<meta name="description" content="Current state of the Animal Animator 3D hummingbird: a 58-bone rig, rebuilt weight painting and six 60 fps core animations. Free download with credit. Hummingbird v2 is in progress.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hummingbird 3D: Rig, Weight Paint & 6 Animations">
+<meta property="og:description" content="58-bone rig, rebuilt weight painting, six 60 fps clips. Free with credit. Hummingbird v2 is in progress.">
+<meta property="og:image" content="images/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#12151a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2312151a'/%3E%3Cpath d='M6 19c5-1 8-4 10-9 1 4 3 6 7 7l7-2-7 4c-3 2-7 3-11 2l-5 4 1-5z' fill='%23e5a93b'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#12151a; --surface:#1a1f26; --surface-2:#161a20; --media:#20262e; --line:#2a313b;
+  --text:#e8ecf1; --muted:#9ba6b3; --faint:#6f7a87;
+  --amber:#e5a93b; --amber-ink:#1d1405; --emerald:#2bb673;
+  --radius:14px; --gutter:clamp(16px,4vw,40px); --max:1180px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--amber);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:#f3c56c}
+img,video,iframe{display:block;max-width:100%}
+h1,h2,h3{line-height:1.15;letter-spacing:-.015em;margin:0}
+h2{font-size:clamp(1.6rem,3.2vw,2.3rem)}
+h3{font-size:1.08rem}
+p{margin:0}
+code{font:.88em/1 ui-monospace,"Cascadia Mono",Consolas,monospace;background:#232a33;padding:.15em .4em;border-radius:5px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.muted{color:var(--muted)}
+section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:12px;max-width:760px;margin-bottom:32px}
+.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--emerald)}
+
+/* header */
+.top{position:sticky;top:0;z-index:10;background:rgba(18,21,26,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;font-weight:700;white-space:nowrap}
+.brand svg{flex:none}
+.nav{display:flex;gap:18px;margin-left:auto;font-size:.93rem}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover{color:var(--text)}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600;color:var(--amber);border:1px solid rgba(229,169,59,.45);border-radius:999px;padding:4px 11px;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 0 rgba(229,169,59,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(229,169,59,0)}100%{box-shadow:0 0 0 0 rgba(229,169,59,0)}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+@media (max-width:860px){.nav{display:none}.top .pill{margin-left:auto}}
+
+/* hero */
+.hero{padding:clamp(40px,6vw,72px) 0 clamp(40px,6vw,64px)}
+.hero-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(28px,4vw,56px);align-items:center}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.5rem);margin:14px 0 18px}
+.hero h1 span{color:var(--amber)}
+.lead{font-size:clamp(1.02rem,1.5vw,1.15rem);color:#c9d1db;max-width:560px}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:10px;font-weight:650;text-decoration:none;border:1px solid var(--line);color:var(--text);background:var(--surface);transition:transform .15s,border-color .15s,background .15s}
+.btn:hover{color:var(--text);border-color:#4a5462;transform:translateY(-1px)}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.btn.primary:hover{background:#f0bb57;color:var(--amber-ink)}
+.btn svg{flex:none}
+.hero-media{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--media);border:1px solid var(--line);aspect-ratio:16/9}
+.hero-media video{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;left:12px;bottom:12px;font-size:.78rem;font-weight:600;background:rgba(18,21,26,.78);border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:#cdd5de}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+/* status banner */
+.status{display:flex;gap:16px;align-items:flex-start;margin-top:clamp(36px,5vw,52px);padding:18px 20px;border-radius:var(--radius);border:1px solid rgba(229,169,59,.35);background:linear-gradient(90deg,rgba(229,169,59,.10),rgba(229,169,59,.02))}
+.status .dot{margin-top:8px;flex:none}
+.status strong{color:var(--amber)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:28px 0 0}
+.stat{background:var(--surface-2);padding:18px 16px}
+.stat b{display:block;font-size:clamp(1.4rem,2.4vw,1.9rem);line-height:1.1;letter-spacing:-.02em}
+.stat span{display:block;font-size:.84rem;color:var(--muted);margin-top:4px}
+@media (max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* clip cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.card video{width:100%;aspect-ratio:16/9;background:var(--media);cursor:pointer}
+.card-body{padding:16px 18px 20px;display:grid;gap:8px}
+.card-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.num{font:600 .8rem ui-monospace,Consolas,monospace;color:var(--faint);margin-right:6px}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.75rem;font-weight:600;color:#c4ccd6;background:#232a33;border-radius:6px;padding:2px 8px}
+.chip.loop{color:var(--emerald);background:rgba(43,182,115,.12)}
+.card p{font-size:.94rem;color:#c3cbd5}
+.note{margin-top:22px;padding:16px 18px;border-left:3px solid var(--emerald);background:var(--surface-2);border-radius:0 10px 10px 0;color:#c3cbd5;font-size:.95rem}
+.note b{color:var(--text)}
+
+/* figures */
+.figs{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+figure a{display:block;background:var(--media)}
+figure img{width:100%;height:auto}
+figcaption{padding:14px 18px 18px;font-size:.93rem;color:#c3cbd5}
+figcaption b{color:var(--text)}
+.span-12{grid-column:span 12}.span-7{grid-column:span 7}.span-5{grid-column:span 5}.span-6{grid-column:span 6}
+@media (max-width:860px){.span-7,.span-5,.span-6{grid-column:span 12}}
+
+/* pipeline steps */
+.steps{display:grid;gap:22px;counter-reset:step}
+.step{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.step:nth-child(even){grid-template-columns:minmax(0,1.4fr) minmax(0,.9fr)}
+.step:nth-child(even) .step-text{order:2}
+.step-text{display:grid;gap:10px;padding:6px}
+.step-text h3{display:flex;gap:10px;align-items:baseline;font-size:1.2rem}
+.step-text h3::before{counter-increment:step;content:counter(step,decimal-leading-zero);font:600 .85rem ui-monospace,Consolas,monospace;color:var(--amber)}
+.step-text p{color:#c3cbd5;font-size:.96rem}
+.step-media{border-radius:10px;overflow:hidden;background:var(--media)}
+.step-media.duo{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:none}
+.step-media a{display:block}
+.step-media img{width:100%;height:auto}
+@media (max-width:860px){.step,.step:nth-child(even){grid-template-columns:1fr}.step:nth-child(even) .step-text{order:0}}
+.small{font-size:.86rem;color:var(--faint)}
+
+/* v2 + downloads */
+.v2{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center;background:radial-gradient(120% 140% at 0% 0%,rgba(229,169,59,.16),rgba(229,169,59,0) 55%),var(--surface);border:1px solid rgba(229,169,59,.35);border-radius:calc(var(--radius) + 4px);padding:clamp(24px,4vw,44px)}
+.v2 h2{margin:10px 0 14px}
+.v2 ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.v2 li{display:flex;gap:10px;color:#c9d1db}
+.v2 li::before{content:"";flex:none;width:7px;height:7px;margin-top:9px;border-radius:50%;background:var(--emerald)}
+@media (max-width:860px){.v2{grid-template-columns:1fr}}
+.dl{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.dl .card{padding:22px;gap:12px}
+.dl .card h3{font-size:1.12rem}
+.dl .card p{flex:1}
+.dl .size{font:600 .82rem ui-monospace,Consolas,monospace;color:var(--muted)}
+@media (max-width:900px){.dl{grid-template-columns:1fr}}
+.viewer{margin-top:20px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--media);aspect-ratio:16/9;position:relative}
+.viewer button{all:unset;cursor:pointer;position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:linear-gradient(rgba(18,21,26,.25),rgba(18,21,26,.65)),url(images/feeding_lick.webp) center/cover}
+.viewer button span{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:var(--amber);color:var(--amber-ink);font-weight:700}
+.viewer button:focus-visible span{outline:3px solid #fff;outline-offset:3px}
+.viewer iframe{width:100%;height:100%;border:0}
+.license{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--muted);font-size:.92rem}
+.license b{color:var(--text)}
+
+footer{border-top:1px solid var(--line);padding:36px 0 48px;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 20px}
+footer a{color:#c9d1db;text-decoration:none}
+footer a:hover{color:var(--amber)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="https://animalanimator.com/" title="animalanimator.com">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1f252d"/><path d="M6 19c5-1 8-4 10-9 1 4 3 6 7 7l7-2-7 4c-3 2-7 3-11 2l-5 4 1-5z" fill="#e5a93b"/></svg>
+      Animal Animator
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#clips">Clips</a><a href="#rig">Rig &amp; weights</a><a href="#pipeline">Pipeline</a><a href="#v2">v2</a><a href="#download">Download</a>
+    </nav>
+    <span class="pill"><span class="dot"></span>v2 in progress</span>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">3D hummingbird · current state</div>
+        <h1>Hummingbird 3D: rig, weight paint &amp; <span>6&nbsp;core animations</span></h1>
+        <p class="lead">A ruby-throated hummingbird built for animators and game developers. It has a 58-bone rig and weight painting rebuilt so no seam tears while flapping. Its six 60&nbsp;fps clips chain without a pop. This page shows the current build while we work on the <strong>v2 hummingbird release</strong>.</p>
+        <div class="btns">
+          <a class="btn primary" href="https://animalanimator.com/the-ultimate-hummingbird-reference-for-animal-animators/">
+            Read the hummingbird reference
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn" href="https://sketchfab.com/3d-models/hummingbird-rigged-6-animations-open-bill-d9b448ac1025485e843d54bebf35390a">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
+            Free 3D model on Sketchfab
+          </a>
+          <a class="btn" href="#download">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+            Download .blend
+          </a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <video src="videos/01_hover_idle.mp4" poster="videos/01_hover_idle.jpg" autoplay muted loop playsinline preload="auto" data-auto aria-label="Hover idle loop"></video>
+        <span class="tag">01 Hover Idle · 60 fps loop rendered in Blender</span>
+      </div>
+    </div>
+
+    <div class="status" role="note">
+      <span class="dot" aria-hidden="true"></span>
+      <p><strong>Hummingbird v2 is in the works.</strong> Everything on this page is the current build (v1, “Core Animations”), shown as it stands in November 2026. The model, rig and six clips are free to download and use with credit.</p>
+    </div>
+
+    <dl class="stats">
+      <div class="stat"><b>58</b><span>bones (56 bird + 2 prop)</span></div>
+      <div class="stat"><b>45,006</b><span>triangles, bird (4 meshes)</span></div>
+      <div class="stat"><b>6</b><span>clips at 60 fps</span></div>
+      <div class="stat"><b>4</b><span>max bone influences</span></div>
+      <div class="stat"><b>2048²</b><span>PBR textures</span></div>
+      <div class="stat"><b>0</b><span>seam tears in all 6 clips</span></div>
+    </dl>
+  </div>
+</div>
+
+<section id="clips">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The six core clips</div>
+      <h2>Flight, perching and feeding, ready to chain</h2>
+      <p class="muted">Rendered from the master Blender scene (EEVEE, 1280×720, 60&nbsp;fps). The wings beat 6 times a second on screen (1 beat = 10 frames), so every stroke is readable.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <video poster="videos/01_hover_idle.jpg" muted loop playsinline preload="none" data-auto aria-label="Hover idle loop"><source src="videos/01_hover_idle.mp4" type="video/mp4"></video>
+        <div class="card-body">
+          <div class="card-title"><h3><span class="num">01</span>Hover Idle</h3></div>
+          <div class="meta"><span class="chip loop">Loop</span><span class="chip">2 s</span><span class="chip">120 frames</span></div>
+          <p>12 wingbeats per loop, a slow head scan and small tail trims.</p>
+        </div>
+      </article>
+      <article class="card">
+        <video poster="videos/02_forward_flight.jpg" muted loop playsinline preload="none" data-auto aria-label="Forward flight loop"><source src="videos/02_forward_flight.mp4" type="video/mp4"></video>
+        <div class="card-body">
+          <div class="card-title"><h3><span class="num">02</span>Forward Flight</h3></div>
+          <div class="meta"><span class="chip loop">Loop</span><span class="chip">2 s</span><span class="chip">120 frames</span></div>
+          <p>The body pitches 22° more nose-down than in hover (chest 11.9° vs 33.9°). The head stays level and the tail closes.</p>
+        </div>
+      </article>
+      <article class="card">
+        <video poster="videos/03_perched_idle.jpg" muted loop playsinline preload="none" data-auto aria-label="Perched idle loop"><source src="videos/03_perched_idle.mp4" type="video/mp4"></video>
+        <div class="card-body">
+          <div class="card-title"><h3><span class="num">03</span>Perched Idle</h3></div>
+          <div class="meta"><span class="chip loop">Loop</span><span class="chip">4 s</span><span class="chip">240 frames</span></div>
+          <p>Wings folded along the flanks, six quick head turns, breathing and one tail flick. The feet stay locked to the twig.</p>
+        </div>
+      </article>
+      <article class="card">
+        <video poster="videos/04_takeoff.jpg" muted loop playsinline preload="none" data-auto aria-label="Takeoff"><source src="videos/04_takeoff.mp4" type="video/mp4"></video>
+        <div class="card-body">
+          <div class="card-title"><h3><span class="num">04</span>Takeoff</h3></div>
+          <div class="meta"><span class="chip">1.5 s</span><span class="chip">90 frames</span></div>
+          <p>The toes grip through the crouch. The wings start beating at frame 8 while the legs push (f12–28), and the clip ends in the hover pose.</p>
+        </div>
+      </article>
+      <article class="card">
+        <video poster="videos/05_landing.jpg" muted loop playsinline preload="none" data-auto aria-label="Landing"><source src="videos/05_landing.mp4" type="video/mp4"></video>
+        <div class="card-body">
+          <div class="card-title"><h3><span class="num">05</span>Landing</h3></div>
+          <div class="meta"><span class="chip">2.5 s</span><span class="chip">150 frames</span></div>
+          <p>Approach, descent and docking. The toes open, touch down on the twig at frame 92 and close, and the wings fold after the grasp.</p>
+        </div>
+      </article>
+      <article class="card">
+        <video poster="videos/06_flower_feeding.jpg" muted loop playsinline preload="none" data-auto aria-label="Flower feeding loop"><source src="videos/06_flower_feeding.mp4" type="video/mp4"></video>
+        <div class="card-body">
+          <div class="card-title"><h3><span class="num">06</span>Flower Feeding</h3></div>
+          <div class="meta"><span class="chip loop">Loop</span><span class="chip">3 s</span><span class="chip">180 frames</span></div>
+          <p>Three licks: the bill tip opens, the tongue goes out and its tips splay. Then the bill opens in a straight V with two tongue flicks.</p>
+        </div>
+      </article>
+    </div>
+    <p class="note"><b>Chain:</b> Perched → Takeoff → Hover → Landing → Perched. Every bone matches at each hand-off, and every loop closes exactly. Takeoff and Landing carry root motion: the root moves 0.80 and 1.15 units between clips, so keep that offset when you chain them in a game engine. The one-shot clips above hold their last pose for 0.6&nbsp;s before repeating.</p>
+  </div>
+</section>
+
+<section id="rig">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Rig and weight paint</div>
+      <h2>58 bones, weights that never tear</h2>
+      <p class="muted">The scan arrived as 61 separate shells. The weights were rebuilt across them and every seam is stitched, so flapping never opens a gap.</p>
+    </div>
+    <div class="figs">
+      <figure class="span-7">
+        <a href="images/rig_58_bones.webp" target="_blank" rel="noopener"><img src="images/rig_58_bones.webp" width="1600" height="1096" loading="lazy" alt="The hummingbird rig: 58 bones drawn over the model, coloured by group"></a>
+        <figcaption><b>58 bones in 7 groups:</b> body &amp; head 6, bill &amp; jaw 4, tongue 7, wings 14, tail 5, legs &amp; toes 20 (16 toe bones), props 2. 52 of them carry skin weights.</figcaption>
+      </figure>
+      <figure class="span-5">
+        <a href="images/bill_weight_paint.webp" target="_blank" rel="noopener"><img src="images/bill_weight_paint.webp" width="1600" height="1875" loading="lazy" alt="Bill weight paint, closed and open, from the side and from below"></a>
+        <figcaption><b>Bill weights.</b> The upper bill hands over from <code>bill</code> to <code>bill_tip</code> across 45–75&nbsp;% of its length. The lower bill follows <code>jaw</code>. The skin at the bill base splits at the tomium, so the bill opens along that line.</figcaption>
+      </figure>
+      <figure class="span-12">
+        <a href="images/weight_strain_before_after.webp" target="_blank" rel="noopener"><img src="images/weight_strain_before_after.webp" width="2000" height="728" loading="lazy" alt="Edge-stretch heat maps over all six clips, original weights next to the rebuilt weights"></a>
+        <figcaption><b>Worst edge stretch over all six clips</b>, original weights next to the rebuilt skin (red = most stretch). The rebuild links all 61 shells and stitches 947 seam clusters (4,092 vertices), so both sides of every seam move together.</figcaption>
+      </figure>
+      <figure class="span-12">
+        <a href="images/no_tears_dorsal.webp" target="_blank" rel="noopener"><img src="images/no_tears_dorsal.webp" width="2000" height="568" loading="lazy" alt="The back while hovering and while perched, plus the claws gripping the twig"></a>
+        <figcaption><b>Continuous while flapping and perched.</b> No seam opens past the 0.004-unit tear threshold in any clip (the largest gap is 0.0035). The trade-off: the scanned wings are fused to the body in a spread pose, so a little extra stretch remains at the wing roots.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="pipeline">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The pipeline so far</div>
+      <h2>How the current build got here</h2>
+      <p class="muted">Every step is a script run on the master Blender scene. Each one was measured on the mesh, not judged by eye. The figures are straight from that pipeline. Labels such as v3–v5 in them are internal iterations of this build.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-text">
+          <h3>A bill that opens</h3>
+          <p>The scanned bill was a closed 409-vertex cone, and the tongue poked out through its sides. It was measured with 48 rays at 60 stations along its axis. It was then rebuilt as an upper bill and a jaw, each with a mouth lining and a tongue groove, and given new bones: <code>jaw</code>, <code>jaw_tip</code> and <code>bill_tip</code>.</p>
+        </div>
+        <div class="step-media"><a href="images/bill_rebuild.webp" target="_blank" rel="noopener"><img src="images/bill_rebuild.webp" width="2000" height="682" loading="lazy" alt="Bill before and after: the old tongue poking through, the rebuilt bill with the tongue inside"></a></div>
+      </div>
+      <div class="step">
+        <div class="step-text">
+          <h3>A mouth corner that stretches</h3>
+          <p>The skin behind the bill used to stay rigid and turn into a flap when the jaw dropped. It is now cut cleanly at the keratin line and split at the tomium. A small web of skin closes the corner of the mouth when the bill opens.</p>
+        </div>
+        <div class="step-media"><a href="images/mouth_corner.webp" target="_blank" rel="noopener"><img src="images/mouth_corner.webp" width="2000" height="763" loading="lazy" alt="Mouth corner before and after: rigid flap versus skin that follows the jaw"></a></div>
+      </div>
+      <div class="step">
+        <div class="step-text">
+          <h3>A forked tongue on 7 bones</h3>
+          <p>The tongue stretches out from a fixed base instead of sliding as a rigid tube. Its two tips splay in the nectar and close on the way back, which is how hummingbirds trap nectar (Rico-Guevara &amp; Rubega 2011).</p>
+        </div>
+        <div class="step-media"><a href="images/tongue.webp" target="_blank" rel="noopener"><img src="images/tongue.webp" width="2000" height="435" loading="lazy" alt="Four frames of the tongue: tips splay, gape and flick, retraction"></a></div>
+      </div>
+      <div class="step">
+        <div class="step-text">
+          <h3>Claws that grip the twig</h3>
+          <p>There are 16 toe bones. The toes open on the approach, touch down on the twig and close around it. From contact on they are locked to the twig in world space, so they never slide or sink into the bark. The twig was made twice as thick.</p>
+        </div>
+        <div class="step-media"><a href="images/claws_twig.webp" target="_blank" rel="noopener"><img src="images/claws_twig.webp" width="1920" height="1068" loading="lazy" alt="Six views of the claws opening, touching down and gripping the twig"></a></div>
+      </div>
+      <div class="step">
+        <div class="step-text">
+          <h3>Feeding, grounded in research</h3>
+          <p>While licking, the tip of the upper bill flexes open as the tongue goes out (Rico-Guevara et&nbsp;al. 2024). Out of the flower, the bill opens in a straight V: 12° at the jaw plus a 4° lift of the upper bill.</p>
+        </div>
+        <div class="step-media duo">
+          <a href="images/feeding_lick.webp" target="_blank" rel="noopener"><img src="images/feeding_lick.webp" width="1600" height="1000" loading="lazy" alt="Close-up of a lick at the trumpet flower"></a>
+          <a href="images/feeding_gape.webp" target="_blank" rel="noopener"><img src="images/feeding_gape.webp" width="1600" height="1000" loading="lazy" alt="Close-up of the open V gape with the tongue out"></a>
+        </div>
+      </div>
+    </div>
+    <p class="small" style="margin-top:18px">The full write-up, with every measurement and source, is in the <a href="https://animalanimator.com/the-ultimate-hummingbird-reference-for-animal-animators/">ultimate hummingbird reference for animal animators</a>.</p>
+  </div>
+</section>
+
+<section id="v2">
+  <div class="wrap">
+    <div class="v2">
+      <div>
+        <span class="pill"><span class="dot"></span>Work in progress</span>
+        <h2>Next up: Hummingbird v2</h2>
+        <p class="lead">We're working on the v2 hummingbird release. This page will be updated when it ships. Until then, the v1 build above is free to use with credit.</p>
+        <div class="btns">
+          <a class="btn primary" href="https://animalanimator.com/">Follow on animalanimator.com</a>
+          <a class="btn" href="https://animalanimator.com/the-ultimate-hummingbird-reference-for-animal-animators/">Hummingbird reference</a>
+        </div>
+      </div>
+      <ul>
+        <li>v1 “Core Animations” is live: 6 clips, 58-bone rig, rebuilt weights.</li>
+        <li>Free GLB on Sketchfab, clean .blend files on this page.</li>
+        <li>v2 is in development. Watch animalanimator.com for the release.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Download</div>
+      <h2>Get the current build</h2>
+      <p class="muted">Both Blender files are clean copies of the master scene. They contain no Python scripts, custom properties, file paths or UI layout. They were saved with Blender 5.1.</p>
+    </div>
+    <div class="dl">
+      <article class="card">
+        <h3>Sketchfab · view &amp; download</h3>
+        <p class="muted">All six animations play in the browser. Free GLB download, CC&nbsp;BY&nbsp;4.0.</p>
+        <a class="btn primary" href="https://sketchfab.com/3d-models/hummingbird-rigged-6-animations-open-bill-d9b448ac1025485e843d54bebf35390a">Open on Sketchfab</a>
+      </article>
+      <article class="card">
+        <h3>Blender file · full</h3>
+        <span class="size">hummingbird_v1_core_animations.blend · 16.9 MB</span>
+        <p class="muted">The bird (4 meshes), the rig, all 6 actions and the perch and flower props, with textures packed. The normal map is 8-bit, as in the Sketchfab GLB.</p>
+        <a class="btn" href="downloads/hummingbird_v1_core_animations.blend" download>Download full .blend</a>
+      </article>
+      <article class="card">
+        <h3>Blender file · rig only</h3>
+        <span class="size">hummingbird_v1_rig_only.blend · 1.3 MB</span>
+        <p class="muted">The armature and the 6 actions, with no meshes. Use it to study the animation curves in the Graph Editor.</p>
+        <a class="btn" href="downloads/hummingbird_v1_rig_only.blend" download>Download rig .blend</a>
+      </article>
+    </div>
+    <div class="viewer" id="viewer">
+      <button type="button" aria-label="Load the interactive Sketchfab 3D viewer">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Try it in 3D (loads Sketchfab)</span>
+      </button>
+    </div>
+    <div class="license">
+      <span><b>License:</b> free with credit (CC BY 4.0) · no AI training</span>
+      <span><b>Credit:</b> Animal Animator (<a href="https://animalanimator.com/">animalanimator.com</a>)</span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Animal Animator · Hummingbird v1 “Core Animations” · v2 in progress</span>
+    <nav aria-label="Links">
+      <a href="https://animalanimator.com/">animalanimator.com</a>
+      <a href="https://animalanimator.com/the-ultimate-hummingbird-reference-for-animal-animators/">Hummingbird reference</a>
+      <a href="https://sketchfab.com/3d-models/hummingbird-rigged-6-animations-open-bill-d9b448ac1025485e843d54bebf35390a">Sketchfab model</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var vids = document.querySelectorAll('video[data-auto]');
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  if (reduce) {
+    vids.forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+  } else if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.isIntersecting ? play(e.target) : e.target.pause(); });
+    }, { threshold: 0.35 });
+    vids.forEach(function (v) { io.observe(v); });
+  } else {
+    vids.forEach(play);
+  }
+  vids.forEach(function (v) { v.addEventListener('click', function () { v.paused ? play(v) : v.pause(); }); });
+
+  var viewer = document.getElementById('viewer');
+  viewer.querySelector('button').addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.title = 'Hummingbird – Rigged, 6 Animations (Open Bill) on Sketchfab';
+    f.src = 'https://sketchfab.com/models/d9b448ac1025485e843d54bebf35390a/embed?autostart=1&ui_theme=dark&dnt=1';
+    f.allow = 'autoplay; fullscreen; xr-spatial-tracking';
+    f.setAttribute('allowfullscreen', '');
+    viewer.innerHTML = ''; viewer.appendChild(f);
+  });
+})();
+</script>
+</body>
+</html>
